@@ -4,7 +4,7 @@
  * Created:
  *   5/15/2020, 7:35:57 PM
  * Last edited:
- *   5/15/2020, 8:39:46 PM
+ *   5/16/2020, 8:15:04 PM
  * Auto updated?
  *   Yes
  *
@@ -17,6 +17,7 @@
 
 #include <cstddef>
 #include <initializer_list>
+#include <ostream>
 
 namespace Numbers {
     /* Represents a node in the LinkedList. */
@@ -52,8 +53,10 @@ namespace Numbers {
             /* Deconstructor for the LinkedList class. If DEBUG is given, also performs some sanity checks. */
             ~LinkedList();
 
-            /* Adds a new element to the list. */
+            /* Adds a new element to the end of list. */
             void add(int value);
+            /* Adds a new element to the beginning of the list. */
+            void add_head(int value);
 
             /* Returns a reference to the head of the list. Returns a nullptr if the list has no such element.  */
             LinkedListNode* get_head() const;

@@ -32,6 +32,10 @@ GXX_ARGS += -DSMALLNUMBER
 NUMBERS_LIB = $(OBJ)/SmallNumber.o
 endif
 
+ifdef TEST
+GXX_ARGS += -DTEST
+endif
+
 
 
 ##### DA RULES #####
@@ -71,13 +75,18 @@ main: $(BIN)/main.out
 $(TST_BIN)/test_linkedlist.out: $(TST_SRC)/test_linkedlist.cpp $(OBJ)/LinkedList.o | $(TST_BIN)
 	$(GXX) $(GXX_ARGS) -o $@ $(TST_SRC)/test_linkedlist.cpp $(OBJ)/LinkedList.o
 
+# Test rule for LargeNumber
+$(TST_BIN)/test_largenumber.out: $(TST_SRC)/test_largenumber.cpp $(OBJ)/LargeNumber.o $(OBJ)/Number.o $(OBJ)/LinkedList.o | $(TST_BIN)
+	$(GXX) $(GXX_ARGS) -o $@ $(TST_SRC)/test_largenumber.cpp $(OBJ)/LargeNumber.o $(OBJ)/Number.o $(OBJ)/LinkedList.o
+
 # Test pseudo rule
-tests: $(TST_BIN)/test_linkedlist.out
+tests: $(TST_BIN)/test_linkedlist.out $(TST_BIN)/test_largenumber.out
 	$(info )
 	$(info Running tests...)
 	$(info )
 
 	$(TST_BIN)/test_linkedlist.out
+	$(TST_BIN)/test_largenumber.out
 
 # All and clean
 all: tests main

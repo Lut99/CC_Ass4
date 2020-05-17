@@ -4,7 +4,7 @@
  * Created:
  *   5/15/2020, 7:37:09 PM
  * Last edited:
- *   5/15/2020, 8:54:22 PM
+ *   5/16/2020, 8:24:07 PM
  * Auto updated?
  *   Yes
  *
@@ -40,7 +40,18 @@ LinkedList::LinkedList(initializer_list<int> values)
     n_nodes(0)
 {
     #ifdef DEBUG
-    cout << "LinkedList::LinkedList(" << values << ")" << endl;
+    cout << "LinkedList::LinkedList({";
+    bool did_first = false;
+    for (auto n : values) {
+        if (did_first) {
+            cout << ", ";
+        } else {
+            did_first = false;
+        }
+        
+        cout << n;
+    }
+    cout << "})" << endl;
     #endif
 
     // Add all elements to the LinkedList
@@ -90,7 +101,6 @@ LinkedList::~LinkedList() {
         // Sanity check that tail is also not removed
         if (this->tail == nullptr) {
             cerr << "ERROR: LinkedList::~LinkedList(): Head is non-empty (" << this->head << "), but tail is." << endl;
-            throw std::exception("An exception has occured.");
         }
         #endif
 
@@ -111,7 +121,6 @@ LinkedList::~LinkedList() {
         // Make sure that the size is correct (sanity check)
         if (this->n_nodes != 0) {
             cerr << "ERROR: LinkedList::~LinkedList(): Invalid size count '" << this->n_nodes << "'." << endl;
-            throw std::exception("An exception has occured.");
         }
         #endif
     }
@@ -120,7 +129,6 @@ LinkedList::~LinkedList() {
     // Sanity check that tail is removed as well now
     if (this->tail == nullptr) {
         cerr << "ERROR: LinkedList::~LinkedList(): Head is empty, but tail isn't (" << this->tail << ")." << endl;
-        throw std::exception("An exception has occured.");
     }
     #endif
 }
@@ -137,27 +145,12 @@ void LinkedList::add(int value) {
 
     // Do different things depending whether there is a tail
     if (this->tail == nullptr) {
-        #ifdef DEBUG
-        // Sanity check that head is empty as well
-        if (this->head != nullptr) {
-            cerr << "ERROR: LinkedList::add(" << value << "): Head is non-empty (" << this->head << "), but tail is." << endl;
-            throw std::exception("An exception has occured.");
-        }
-        #endif
-
         // Set as head and be done
         this->head = new_n;
     } else {
-        #ifdef DEBUG
-        // Sanity check that head is non-empty as well
-        if (this->head == nullptr) {
-            cerr << "ERROR: LinkedList::add(" << value << "): Head is empty but tail isn't (" << this->tail << ")" << endl;
-            throw std::exception("An exception has occured.");
-        }
-        #endif
-
         // Set as next from the tail
         this->tail->next = new_n;
+        new_n->prev = this->tail;
     }
 
     // Update the tail and size counters
@@ -165,13 +158,28 @@ void LinkedList::add(int value) {
     this->n_nodes++;
 }
 
+void LinkedList::add_head(int value) {
+    #ifdef DEBUG
+    cout << "LinkedList::add_head(" << value << ")" << endl;
+    #endif
+
+    // Create the new node
+    LinkedListNode* new_n = new LinkedListNode {value, nullptr, nullptr};
+
+    // If there already is a head, set it as next
+    if (this->head != nullptr) {
+        new_n->next = this->head;
+        this->head->prev = new_n;
+    }
+
+    // Update the head and size counters
+    this->head = new_n;
+    this->n_nodes++;
+}
+
 
 
 LinkedListNode* LinkedList::get_head() const {
-    #ifdef DEBUG
-    cout << "LinkedList::get_head()" << endl;
-    #endif
-
     return this->head;
 }
 
@@ -197,10 +205,6 @@ LinkedListNode* LinkedList::get(size_t index) const {
 }
 
 LinkedListNode* LinkedList::get_tail() const {
-    #ifdef DEBUG
-    cout << "LinkedList::get_tail()" << endl;
-    #endif
-    
     return this->tail;
 }
 

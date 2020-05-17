@@ -4,7 +4,7 @@
  * Created:
  *   5/15/2020, 6:32:16 PM
  * Last edited:
- *   5/15/2020, 7:27:21 PM
+ *   5/16/2020, 9:30:54 PM
  * Auto updated?
  *   Yes
  *
@@ -51,6 +51,8 @@ namespace Numbers {
 
             /* Friends the stream operator to convert to string. */
             friend std::ostream& operator<<(std::ostream &os, const Number& n);
+            /* Prints the LargeNumber to a string. */
+            std::string to_string() const;
     };
 
     /* Allows the Number to be printed to given stream. */
