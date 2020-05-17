@@ -4,7 +4,7 @@
  * Created:
  *   5/16/2020, 3:20:28 PM
  * Last edited:
- *   5/16/2020, 10:20:22 PM
+ *   5/17/2020, 10:52:29 PM
  * Auto updated?
  *   Yes
  *
@@ -22,21 +22,33 @@ using namespace Numbers;
 
 
 #define ADD_ASSERT(N1, N2, RES) \
-    LargeNumber* N1 ## N2 ## RES = LargeNumber(#N1) + LargeNumber(#N2);
-    if (result->to_string() != #RES) { \
+    Number* result_ ## N1 ## N2 ## RES = LargeNumber(#N1) + LargeNumber(#N2); \
+    if ((result_ ## N1 ## N2 ## RES)->to_string() != #RES) { \
         cout << " [FAIL]" << endl << endl; \
-        cerr << "ERROR: Unexpected output value for " << #N1 << " + " << #N2 << ": got \"" << (*result) << "\", expected \"" << #RES << "\"" << endl << endl; \
-        delete result;
+        cerr << "ERROR: Unexpected output value for " << #N1 << " + " << #N2 << ": got \"" << (*(result_ ## N1 ## N2 ## RES)) << "\", expected \"" << #RES << "\"" << endl << endl; \
+        delete result_ ## N1 ## N2 ## RES; \
         return false; \
     } \
-    delete result;
+    delete result_ ## N1 ## N2 ## RES;
 
-#define MUL_ASSERT(N1, N2, RES) \
-    if ((LargeNumber(#N1) * LargeNumber(#N2))->to_string() != #RES) { \
+#define ADD_INPLACE_ASSERT(N1, N2, RES) \
+    LargeNumber result_ ## N1 ## N2 ## RES(#N1); \
+    result_ ## N1 ## N2 ## RES += LargeNumber(#N2); \
+    if ((result_ ## N1 ## N2 ## RES).to_string() != #RES) { \
         cout << " [FAIL]" << endl << endl; \
-        cerr << "ERROR: Unexpected output value for " << #N1 << " * " << #N2 << ": got \"" << (*(LargeNumber(#N1) * LargeNumber(#N2))) << "\", expected \"" << #RES << "\"" << endl << endl; \
+        cerr << "ERROR: Unexpected output value for " << #N1 << " + " << #N2 << ": got \"" << (result_ ## N1 ## N2 ## RES) << "\", expected \"" << #RES << "\"" << endl << endl; \
         return false; \
     }
+
+#define MUL_ASSERT(N1, N2, RES) \
+    Number* result_ ## N1 ## N2 ## RES = LargeNumber(#N1) * LargeNumber(#N2); \
+    if ((result_ ## N1 ## N2 ## RES)->to_string() != #RES) { \
+        cout << " [FAIL]" << endl << endl; \
+        cerr << "ERROR: Unexpected output value for " << #N1 << " * " << #N2 << ": got \"" << (*(result_ ## N1 ## N2 ## RES)) << "\", expected \"" << #RES << "\"" << endl << endl; \
+        delete result_ ## N1 ## N2 ## RES; \
+        return false; \
+    } \
+    delete result_ ## N1 ## N2 ## RES;
 
 
 bool test_parsing() {
@@ -142,12 +154,27 @@ bool test_add() {
     return true;
 }
 
+bool test_add_inplace() {
+    // Do some more computations, this time using the +=
+    ADD_INPLACE_ASSERT(50, 50, 100)
+    ADD_INPLACE_ASSERT(12412, 1234234, 1246646)
+    ADD_INPLACE_ASSERT(0, 72349871902374902873409182734098, 72349871902374902873409182734098)
+    ADD_INPLACE_ASSERT(100000000000000000000000000000000000, 100000000000000000000000000000000000, 200000000000000000000000000000000000)
+    ADD_INPLACE_ASSERT(100000000000000000000000000000000000, 823894628763487264982763489263498273649, 823994628763487264982763489263498273649)
+    
+    // Succes!
+    cout << " [ OK ]" << endl;
+    return true;
+}
+
 bool test_multiply() {
     // Do a series of computations, checking them each time
     MUL_ASSERT(50, 50, 2500)
     MUL_ASSERT(2345, 6456465, 15140410425)
     MUL_ASSERT(1000000000, 1000000000000, 1000000000000000000000)
     MUL_ASSERT(1000000000000, 37546287634582763952468726348723648726348732, 37546287634582763952468726348723648726348732000000000000)
+    MUL_ASSERT(99999999, 99999999, 9999999800000001)
+    MUL_ASSERT(99999999999999999999, 99999999999999999999, 9999999999999999999800000000000000000001)
 
     // Succes!
     cout << " [ OK ]" << endl;
@@ -186,7 +213,13 @@ int main() {
         return EXIT_FAILURE;
     }
 
-    cout << "  Testing multiplication...          ";
+    cout << "  Testing addition (inplace)...";
+    if (!test_add_inplace()) {
+        cout << "LargeNumber tests failed." << endl << endl;
+        return EXIT_FAILURE;
+    }
+
+    cout << "  Testing multiplication...    ";
     if (!test_multiply()) {
         cout << "LargeNumber tests failed." << endl << endl;
         return EXIT_FAILURE;

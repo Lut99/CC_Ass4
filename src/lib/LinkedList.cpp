@@ -4,7 +4,7 @@
  * Created:
  *   5/15/2020, 7:37:09 PM
  * Last edited:
- *   5/16/2020, 8:24:07 PM
+ *   5/17/2020, 7:01:55 PM
  * Auto updated?
  *   Yes
  *
@@ -123,19 +123,19 @@ LinkedList::~LinkedList() {
             cerr << "ERROR: LinkedList::~LinkedList(): Invalid size count '" << this->n_nodes << "'." << endl;
         }
         #endif
+    } else {
+        #ifdef DEBUG
+        // Sanity check that tail is removed as well now
+        if (this->tail != nullptr) {
+            cerr << "ERROR: LinkedList::~LinkedList(): Head is empty, but tail isn't (" << this->tail << ")." << endl;
+        }
+        #endif
     }
-
-    #ifdef DEBUG
-    // Sanity check that tail is removed as well now
-    if (this->tail == nullptr) {
-        cerr << "ERROR: LinkedList::~LinkedList(): Head is empty, but tail isn't (" << this->tail << ")." << endl;
-    }
-    #endif
 }
 
 
 
-void LinkedList::add(int value) {
+LinkedListNode* LinkedList::add(int value) {
     #ifdef DEBUG
     cout << "LinkedList::add(" << value << ")" << endl;
     #endif
@@ -156,9 +156,11 @@ void LinkedList::add(int value) {
     // Update the tail and size counters
     this->tail = new_n;
     this->n_nodes++;
+
+    return new_n;
 }
 
-void LinkedList::add_head(int value) {
+LinkedListNode* LinkedList::add_head(int value) {
     #ifdef DEBUG
     cout << "LinkedList::add_head(" << value << ")" << endl;
     #endif
@@ -170,11 +172,16 @@ void LinkedList::add_head(int value) {
     if (this->head != nullptr) {
         new_n->next = this->head;
         this->head->prev = new_n;
+    } else {
+        // Make sure to update the tail
+        this->tail = new_n;
     }
 
     // Update the head and size counters
     this->head = new_n;
     this->n_nodes++;
+
+    return new_n;
 }
 
 
@@ -194,10 +201,20 @@ LinkedListNode* LinkedList::get(size_t index) const {
     }
     #endif
 
-    // Loop until we found it or we end up with nullptr
-    LinkedListNode* n = this->head;
-    for (; n != nullptr && index > 0; n = n->next) {
-        index--;
+    // Determine if it's better to start at the start or at the end
+    LinkedListNode* n;
+    if (index < this->n_nodes / 2) {
+        // Go forward
+        n = this->head;
+        for (; index > 0; index--) {
+            n = n->next;
+        }
+    } else {
+        // Go backward
+        n = this->tail;
+        for (; index < this->n_nodes - 1; index++) {
+            n = n->prev;
+        }
     }
 
     // Return it
@@ -221,10 +238,20 @@ int LinkedList::operator[](size_t index) const {
         throw out_of_range("An exception has occured.");
     }
 
-    // Loop until we found it (won't end up with nullptr, as long as n_nodes is correctly defined)
-    LinkedListNode* n = this->head;
-    for (; index > 0; n = n->next) {
-        index--;
+    // Determine if it's better to start at the start or at the end
+    LinkedListNode* n;
+    if (index < this->n_nodes / 2) {
+        // Go forward
+        n = this->head;
+        for (; index > 0; index--) {
+            n = n->next;
+        }
+    } else {
+        // Go backward
+        n = this->tail;
+        for (; index < this->n_nodes - 1; index++) {
+            n = n->prev;
+        }
     }
 
     // Return it

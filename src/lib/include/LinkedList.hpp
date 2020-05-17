@@ -4,7 +4,7 @@
  * Created:
  *   5/15/2020, 7:35:57 PM
  * Last edited:
- *   5/16/2020, 8:15:04 PM
+ *   5/17/2020, 6:23:30 PM
  * Auto updated?
  *   Yes
  *
@@ -53,10 +53,10 @@ namespace Numbers {
             /* Deconstructor for the LinkedList class. If DEBUG is given, also performs some sanity checks. */
             ~LinkedList();
 
-            /* Adds a new element to the end of list. */
-            void add(int value);
-            /* Adds a new element to the beginning of the list. */
-            void add_head(int value);
+            /* Adds a new element to the end of list. Returns the new node to immediately work with it. */
+            LinkedListNode* add(int value);
+            /* Adds a new element to the beginning of the list. Returns the new node to immediately work with it. */
+            LinkedListNode* add_head(int value);
 
             /* Returns a reference to the head of the list. Returns a nullptr if the list has no such element.  */
             LinkedListNode* get_head() const;

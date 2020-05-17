@@ -4,7 +4,7 @@
  * Created:
  *   5/15/2020, 7:31:26 PM
  * Last edited:
- *   5/16/2020, 11:18:04 PM
+ *   5/18/2020, 12:23:17 AM
  * Auto updated?
  *   Yes
  *
@@ -172,22 +172,6 @@ bool LargeNumber::operator==(const Number& n) const {
 
 
 
-Number& LargeNumber::operator<<(const int s) {
-    #ifdef DEBUG
-    cout << "LargeNumber:: " << (*this) << " << " << s << endl;
-    #endif
-
-    // Simply add s nodes
-    for (int i = 0; i < s; i++) {
-        this->data.add(0);
-    }
-
-    // Done, ez
-    return (*this);
-}
-
-
-
 Number& LargeNumber::operator++() {
     #ifdef DEBUG
     cout << "LargeNumber:: ++" << (*this) << endl;
@@ -251,17 +235,11 @@ Number& LargeNumber::operator+=(const Number& n) {
     // Cast Number to LargeNumber
     const LargeNumber& other = (LargeNumber&) n;
 
-    // Make sure the list of n1 has the largest size
+    // Now add all nodes of the given number to this one, preserving carries is it grows too large
     LinkedListNode* n1 = this->data.get_tail();
     LinkedListNode* n2 = other.data.get_tail();
-    if (this->data.size() < other.data.size()) {
-        n1 = other.data.get_tail();
-        n2 = this->data.get_tail();
-    }
-
-    // Now add all nodes of the smaller list to the larger one, preserving carries is it grows too large
     int carry = 0;
-    while (n2 != nullptr) {
+    while (n1 != nullptr && n2 != nullptr) {
         // Add these together, plus any carry
         int new_value = n1->value + n2->value + carry;
 
@@ -273,16 +251,16 @@ Number& LargeNumber::operator+=(const Number& n) {
         }
 
         // Add it to the list 
-        this->data.add_head(new_value);
+        n1->value = new_value;
         
         n1 = n1->prev;
         n2 = n2->prev;
     }
 
     // Add any remaining n1 nodes, adding a carry if needed
-    for (; n1 != nullptr; n1 = n1->prev) {
+    for (; n2 != nullptr; n2 = n2->prev) {
         // Add these together, plus any carry
-        int new_value = n1->value + carry;
+        int new_value = n2->value + carry;
 
         // Reset the carry and get any new ones. Because n1 + n2 is never more than one digit above k, carry can only become 1
         carry = 0;
@@ -349,7 +327,7 @@ Number* LargeNumber::operator+(const Number& n) const {
         int new_value = n1->value + carry;
 
         // Reset the carry and get any new ones. Because n1 + n2 is never more than one digit above k, carry can only become 1
-        carry = 0;
+        carry = 0;          
         if (new_value > this->max_value) {
             carry++;
             new_value -= this->max_value;
@@ -372,54 +350,60 @@ Number* LargeNumber::operator*(const Number& n) const {
     #ifdef DEBUG
     cout << "LargeNumber:: " << (*this) << " + " << n << endl;
     #endif
-    
+
+    cout << "*** NEW CALL ***" << endl;
+
     // Cast Number to LargeNumber
     const LargeNumber& other = (LargeNumber&) n;
 
-    // Create the new data, and initialize it with a single zero
+    // Create the new data
     LargeNumber* result = new LargeNumber(this->k);
-    result->data.add(0);
 
-    // Initialize the r_start, which determines the offset each loop of the second number
-    LinkedListNode* r_start = result->data.get_tail();
-    int offset = 0;
-    
-    // Double loop to do the multiplication
+    // Loop through other to add those one-by-one
+    size_t offset = 0;
     int ceil_value = this->max_value + 1;
     for (LinkedListNode* n2 = other.data.get_tail(); n2 != nullptr; n2 = n2->prev) {
-        // Get r, with offset
-        LinkedListNode* r = r_start;
-        
-        // Loopt trough the first list to multiply each number
-        LargeNumber carry;
+        LargeNumber temp_result(this->k);
+
+        // We first loop over all nodes in this to add each of them to the current node in other
+        int carry = 0;
         for (LinkedListNode* n1 = this->data.get_tail(); n1 != nullptr; n1 = n1->prev) {
-            // Should be at most 2 * k + 1 digits, and since k <= 4, it is at most 9 digits long
-            int new_value = n1->value * n2->value + r->value;
+            // Compute the new value
+            int new_value = n1->value * n2->value + carry;
+
+            cout << "Carry after " << new_value << ": " << (new_value / ceil_value) << endl;
 
             // Compute the carry
-            carry += new_value / ceil_value;
+            carry = new_value / ceil_value;
             new_value = new_value % ceil_value;
 
-            // Set it to the node, either directly or create a new one
-            if (r == nullptr) {
-                result->data.add_head(new_value);
-            } else {
-                r->value = new_value;
-                r = r->prev;
-            }
+            cout << "Remaining value: " << new_value << endl;
+
+            // Set the the result
+            temp_result.data.add_head(new_value);
         }
 
-        // Shift the carry to the left to mimic the offset from the n2 loop
-        carry << offset;
+        // Add the leftover carry to r
+        while (carry > 0) {
+            int new_value = carry % ceil_value;
+            carry = carry / ceil_value;
+            cout << "Adding: " << new_value << endl;
+            temp_result.data.add_head(new_value);
+        }
 
-        // Add the carry to the result
-        (*result) += carry;
+        // Shift the LargeNumber by offset (simply add empty nodes at the right)
+        for (size_t i = 0; i < offset; i++) {
+            temp_result.data.add(0);
+        }
 
-        // Increment the offset and the r_start
-        r_start = r_start->prev;
+        cout << "Final to_add: " << temp_result << endl;
+
+        // Add the tempresult
+        (*result) += temp_result;
+
+        // Don't forget to increment
         offset++;
     }
 
-    // Done, return
     return result;
 }

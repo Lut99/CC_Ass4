@@ -4,7 +4,7 @@
  * Created:
  *   5/15/2020, 7:30:20 PM
  * Last edited:
- *   5/16/2020, 11:11:32 PM
+ *   5/17/2020, 10:04:33 PM
  * Auto updated?
  *   Yes
  *
@@ -49,9 +49,6 @@ namespace Numbers {
 
             /* Compares this LargeNumber to another Number, and returns if they are equal. */
             virtual bool operator==(const Number& n) const;
-
-            /* Shifts the LargeNumber by padding s zero-nodes at the end. */
-            virtual Number& operator<<(const int s);
 
             /* Increments the Number by one, inplace. */
             virtual Number& operator++();
