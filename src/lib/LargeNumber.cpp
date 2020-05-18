@@ -1,10 +1,14 @@
 /* LARGE NUMBER.cpp
- *   by Anonymous
+ *   by Tim Müller (11774606)
+ * 
+ * ASSIGNMENT 4
+ * 
+ * Compiled on KDE Neon (Ubuntu 18.04.2) with GCC 7.5.0
  *
  * Created:
  *   5/15/2020, 7:31:26 PM
  * Last edited:
- *   5/18/2020, 12:23:17 AM
+ *   5/18/2020, 9:23:37 PM
  * Auto updated?
  *   Yes
  *
@@ -20,7 +24,6 @@
 #include "LargeNumber.hpp"
 
 using namespace std;
-using namespace Numbers;
 
 
 LargeNumber::LargeNumber(int given_k)
@@ -239,16 +242,14 @@ Number& LargeNumber::operator+=(const Number& n) {
     LinkedListNode* n1 = this->data.get_tail();
     LinkedListNode* n2 = other.data.get_tail();
     int carry = 0;
+    int ceil_value = this->max_value + 1;
     while (n1 != nullptr && n2 != nullptr) {
         // Add these together, plus any carry
         int new_value = n1->value + n2->value + carry;
 
-        // Reset the carry and get any new ones. Because n1 + n2 is never more than one digit above k, carry can only become 1
-        carry = 0;
-        if (new_value > this->max_value) {
-            carry++;
-            new_value -= this->max_value;
-        }
+        // Reset the carry and get any new ones
+        carry = new_value / ceil_value;
+        new_value = new_value % ceil_value;
 
         // Add it to the list 
         n1->value = new_value;
@@ -262,20 +263,28 @@ Number& LargeNumber::operator+=(const Number& n) {
         // Add these together, plus any carry
         int new_value = n2->value + carry;
 
-        // Reset the carry and get any new ones. Because n1 + n2 is never more than one digit above k, carry can only become 1
-        carry = 0;
-        if (new_value > this->max_value) {
-            carry++;
-            new_value -= this->max_value;
-        }
+        // Reset the carry and get any new ones
+        carry = new_value / ceil_value;
+        new_value = new_value % ceil_value;
 
         // Add it to the list 
         this->data.add_head(new_value);
     }
 
     // If there is a carry left, make sure to add it
-    if (carry > 0) {
-        this->data.add_head(carry);
+    while (carry > 0) {
+        if (n1 == nullptr) {
+            this->data.add_head(carry);
+            carry = 0;
+        } else {
+            int new_value = n1->value + carry;
+
+            // Reset the carry and get any new ones
+            carry = new_value / ceil_value;
+            new_value = new_value % ceil_value;
+
+            n1->value = new_value;
+        }
     }
 
     // Done
@@ -303,16 +312,14 @@ Number* LargeNumber::operator+(const Number& n) const {
 
     // Now add all nodes of the smaller list to the larger one, preserving carries is it grows too large
     int carry = 0;
+    int ceil_value = this->max_value + 1;
     while (n2 != nullptr) {
         // Add these together, plus any carry
         int new_value = n1->value + n2->value + carry;
 
-        // Reset the carry and get any new ones. Because n1 + n2 is never more than one digit above k, carry can only become 1
-        carry = 0;
-        if (new_value > this->max_value) {
-            carry++;
-            new_value -= this->max_value;
-        }
+        // Reset the carry and get any new ones
+        carry = new_value / ceil_value;
+        new_value = new_value % ceil_value;
 
         // Add it to the list 
         result->data.add_head(new_value);
@@ -326,12 +333,9 @@ Number* LargeNumber::operator+(const Number& n) const {
         // Add these together, plus any carry
         int new_value = n1->value + carry;
 
-        // Reset the carry and get any new ones. Because n1 + n2 is never more than one digit above k, carry can only become 1
-        carry = 0;          
-        if (new_value > this->max_value) {
-            carry++;
-            new_value -= this->max_value;
-        }
+        // Reset the carry and get any new ones
+        carry = new_value / ceil_value;
+        new_value = new_value % ceil_value;
 
         // Add it to the list 
         result->data.add_head(new_value);
@@ -351,8 +355,6 @@ Number* LargeNumber::operator*(const Number& n) const {
     cout << "LargeNumber:: " << (*this) << " + " << n << endl;
     #endif
 
-    cout << "*** NEW CALL ***" << endl;
-
     // Cast Number to LargeNumber
     const LargeNumber& other = (LargeNumber&) n;
 
@@ -371,32 +373,23 @@ Number* LargeNumber::operator*(const Number& n) const {
             // Compute the new value
             int new_value = n1->value * n2->value + carry;
 
-            cout << "Carry after " << new_value << ": " << (new_value / ceil_value) << endl;
-
             // Compute the carry
             carry = new_value / ceil_value;
             new_value = new_value % ceil_value;
-
-            cout << "Remaining value: " << new_value << endl;
 
             // Set the the result
             temp_result.data.add_head(new_value);
         }
 
         // Add the leftover carry to r
-        while (carry > 0) {
-            int new_value = carry % ceil_value;
-            carry = carry / ceil_value;
-            cout << "Adding: " << new_value << endl;
-            temp_result.data.add_head(new_value);
+        if (carry > 0) {
+            temp_result.data.add_head(carry);
         }
 
         // Shift the LargeNumber by offset (simply add empty nodes at the right)
         for (size_t i = 0; i < offset; i++) {
             temp_result.data.add(0);
         }
-
-        cout << "Final to_add: " << temp_result << endl;
 
         // Add the tempresult
         (*result) += temp_result;
@@ -406,4 +399,12 @@ Number* LargeNumber::operator*(const Number& n) const {
     }
 
     return result;
+}
+
+
+
+string LargeNumber::to_string() const {
+    stringstream sstr;
+    this->print(sstr);
+    return sstr.str();
 }

@@ -1,10 +1,14 @@
 /* MATH.hpp
- *   by Anonymous
+ *   by Bas Terwijn, re-organised by Tim Müller (11774606)
+ * 
+ * ASSIGNMENT 4
+ * 
+ * Compiled on KDE Neon (Ubuntu 18.04.2) with GCC 7.5.0
  *
  * Created:
  *   5/15/2020, 6:31:01 PM
  * Last edited:
- *   5/15/2020, 6:45:58 PM
+ *   5/18/2020, 9:24:36 PM
  * Auto updated?
  *   Yes
  *
@@ -17,18 +21,16 @@
 
 #include "Number.hpp"
 
-namespace Numbers {
-    // Math library that computes fibonacci and factorial numbers, uses the Number interface
-    class Math
-    {
-        public:
-            /* Computes the n'th fibonacci number. */
-            static Number* fibonacci(const Number& n);
+// Math library that computes fibonacci and factorial numbers, uses the Number interface
+class Math
+{
+    public:
+        /* Computes the n'th fibonacci number. */
+        static Number* fibonacci(const Number& n);
 
-            /* Computes the n'th factorial number. */ 
-            static Number* factorial(const Number& n);
+        /* Computes the n'th factorial number. */ 
+        static Number* factorial(const Number& n);
 
-    };
-}
+};
 
 #endif

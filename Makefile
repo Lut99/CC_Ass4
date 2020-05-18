@@ -1,5 +1,8 @@
-# MAKEFILE for ASSIGNMENT 4 of C++
+# MAKEFILE for ASSIGNMENT 4 of C++ Programmeermethoden
 #   by Tim Müller (11774606)
+#
+# Works on KDE Neon (Ubuntu 18.04.2) with GCC 7.5.0
+#
 
 
 ##### CONSTANTS #####
@@ -57,8 +60,8 @@ $(OBJ)/%.o: $(LIB)/%.cpp | $(OBJ)
 	$(GXX) $(GXX_ARGS) -o $@ -c $<
 
 # The Numbers static library
-$(OBJ)/Numbers.a: $(OBJ)/Number.o $(OBJ)/Math.o
-	ar rvs $@ $(OBJ)/Number.o $(OBJ)/Math.o
+$(OBJ)/Numbers.a: $(OBJ)/Number.o $(OBJ)/Math.o $(OBJ)/LinkedList.o
+	ar rvs $@ $(OBJ)/Number.o $(OBJ)/Math.o $(OBJ)/LinkedList.o
 
 # Compile main
 $(OBJ)/Main.o: $(SRC)/Main.cpp | $(OBJ)

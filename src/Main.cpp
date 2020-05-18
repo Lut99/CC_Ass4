@@ -1,10 +1,14 @@
 /* MAIN.cpp
  *   by Tim Müller (11774606)
+ * 
+ * ASSIGNMENT 4
+ * 
+ * Compiled on KDE Neon (Ubuntu 18.04.2) with GCC 7.5.0
  *
  * Created:
  *   5/15/2020, 6:28:51 PM
  * Last edited:
- *   5/15/2020, 7:31:13 PM
+ *   5/18/2020, 9:23:31 PM
  * Auto updated?
  *   Yes
  *
@@ -23,7 +27,6 @@
 #include "Math.hpp"
 
 using namespace std;
-using namespace Numbers;
 
 
 int main(int argc,char** argv)

@@ -1,10 +1,14 @@
 /* LINKED LIST.cpp
- *   by Anonymous
+ *   by Tim Müller (11774606)
+ * 
+ * ASSIGNMENT 4
+ * 
+ * Compiled on KDE Neon (Ubuntu 18.04.2) with GCC 7.5.0
  *
  * Created:
  *   5/15/2020, 7:37:09 PM
  * Last edited:
- *   5/17/2020, 7:01:55 PM
+ *   5/18/2020, 9:23:42 PM
  * Auto updated?
  *   Yes
  *
@@ -21,7 +25,6 @@
 #include "LinkedList.hpp"
 
 using namespace std;
-using namespace Numbers;
 
 
 LinkedList::LinkedList()
@@ -292,7 +295,7 @@ LinkedList& LinkedList::operator=(LinkedList&& other) {
     return *this;
 }
 
-void Numbers::swap(LinkedList& l1, LinkedList& l2) {
+void swap(LinkedList& l1, LinkedList& l2) {
     using std::swap;
 
     #ifdef DEBUG
@@ -307,7 +310,7 @@ void Numbers::swap(LinkedList& l1, LinkedList& l2) {
 
 
 
-std::ostream& Numbers::operator<<(std::ostream& os, const LinkedList& l) {
+std::ostream& operator<<(std::ostream& os, const LinkedList& l) {
     // Start by writing brackets
     os << "{";
 

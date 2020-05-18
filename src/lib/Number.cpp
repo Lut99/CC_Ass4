@@ -1,10 +1,14 @@
 /* NUMBER.cpp
- *   by Anonymous
+ *   by Tim Müller (11774606)
+ * 
+ * ASSIGNMENT 4
+ * 
+ * Compiled on KDE Neon (Ubuntu 18.04.2) with GCC 7.5.0
  *
  * Created:
  *   5/15/2020, 6:35:01 PM
  * Last edited:
- *   5/16/2020, 9:31:08 PM
+ *   5/18/2020, 9:25:35 PM
  * Auto updated?
  *   Yes
  *
@@ -18,7 +22,6 @@
 #include "Number.hpp"
 
 using namespace std;
-using namespace Numbers;
 
 
 bool Number::operator!=(const Number& n) const {
@@ -27,14 +30,7 @@ bool Number::operator!=(const Number& n) const {
 
 
 
-ostream& Numbers::operator<<(ostream& os, const Number& n) {
+ostream& operator<<(ostream& os, const Number& n) {
     n.print(os);
     return os;
 }
-
-string Number::to_string() const {
-    stringstream sstr;
-    this->print(sstr);
-    return sstr.str();
-}
-

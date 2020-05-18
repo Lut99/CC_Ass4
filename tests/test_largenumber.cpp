@@ -1,10 +1,14 @@
 /* TEST LARGENUMBER.cpp
- *   by Anonymous
+ *   by Tim Müller (11774606)
+ * 
+ * ASSIGNMENT 4
+ * 
+ * Compiled on KDE Neon (Ubuntu 18.04.2) with GCC 7.5.0
  *
  * Created:
  *   5/16/2020, 3:20:28 PM
  * Last edited:
- *   5/17/2020, 10:52:29 PM
+ *   5/18/2020, 9:23:16 PM
  * Auto updated?
  *   Yes
  *
@@ -18,11 +22,10 @@
 #include "LargeNumber.hpp"
 
 using namespace std;
-using namespace Numbers;
 
 
 #define ADD_ASSERT(N1, N2, RES) \
-    Number* result_ ## N1 ## N2 ## RES = LargeNumber(#N1) + LargeNumber(#N2); \
+    LargeNumber* result_ ## N1 ## N2 ## RES = (LargeNumber*) (LargeNumber(#N1) + LargeNumber(#N2)); \
     if ((result_ ## N1 ## N2 ## RES)->to_string() != #RES) { \
         cout << " [FAIL]" << endl << endl; \
         cerr << "ERROR: Unexpected output value for " << #N1 << " + " << #N2 << ": got \"" << (*(result_ ## N1 ## N2 ## RES)) << "\", expected \"" << #RES << "\"" << endl << endl; \
@@ -41,7 +44,7 @@ using namespace Numbers;
     }
 
 #define MUL_ASSERT(N1, N2, RES) \
-    Number* result_ ## N1 ## N2 ## RES = LargeNumber(#N1) * LargeNumber(#N2); \
+    LargeNumber* result_ ## N1 ## N2 ## RES = (LargeNumber*) (LargeNumber(#N1) * LargeNumber(#N2)); \
     if ((result_ ## N1 ## N2 ## RES)->to_string() != #RES) { \
         cout << " [FAIL]" << endl << endl; \
         cerr << "ERROR: Unexpected output value for " << #N1 << " * " << #N2 << ": got \"" << (*(result_ ## N1 ## N2 ## RES)) << "\", expected \"" << #RES << "\"" << endl << endl; \
@@ -148,6 +151,8 @@ bool test_add() {
     ADD_ASSERT(0, 72349871902374902873409182734098, 72349871902374902873409182734098)
     ADD_ASSERT(100000000000000000000000000000000000, 100000000000000000000000000000000000, 200000000000000000000000000000000000)
     ADD_ASSERT(100000000000000000000000000000000000, 823894628763487264982763489263498273649, 823994628763487264982763489263498273649)
+    ADD_ASSERT(999899990001, 9998999900010000, 9999999800000001)
+    ADD_ASSERT(9998999900010000, 999899990001, 9999999800000001)
 
     // Succes!
     cout << " [ OK ]" << endl;
@@ -161,6 +166,8 @@ bool test_add_inplace() {
     ADD_INPLACE_ASSERT(0, 72349871902374902873409182734098, 72349871902374902873409182734098)
     ADD_INPLACE_ASSERT(100000000000000000000000000000000000, 100000000000000000000000000000000000, 200000000000000000000000000000000000)
     ADD_INPLACE_ASSERT(100000000000000000000000000000000000, 823894628763487264982763489263498273649, 823994628763487264982763489263498273649)
+    ADD_INPLACE_ASSERT(999899990001, 9998999900010000, 9999999800000001)
+    ADD_INPLACE_ASSERT(9998999900010000, 999899990001, 9999999800000001)
     
     // Succes!
     cout << " [ OK ]" << endl;

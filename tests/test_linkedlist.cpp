@@ -1,10 +1,14 @@
 /* TEST LINKEDLIST.cpp
- *   by Anonymous
+ *   by Tim Müller (11774606)
+ * 
+ * ASSIGNMENT 4
+ * 
+ * Compiled on KDE Neon (Ubuntu 18.04.2) with GCC 7.5.0
  *
  * Created:
  *   5/15/2020, 8:34:29 PM
  * Last edited:
- *   5/16/2020, 8:07:32 PM
+ *   5/18/2020, 9:23:24 PM
  * Auto updated?
  *   Yes
  *
@@ -17,7 +21,6 @@
 #include "LinkedList.hpp"
 
 using namespace std;
-using namespace Numbers;
 
 
 bool test_store_incremental() {

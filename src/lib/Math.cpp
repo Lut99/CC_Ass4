@@ -1,10 +1,14 @@
 /* MATH.cpp
- *   by Anonymous
+ *   by Bas Terwijn, re-organised by Tim Müller (11774606)
+ * 
+ * ASSIGNMENT 4
+ * 
+ * Compiled on KDE Neon (Ubuntu 18.04.2) with GCC 7.5.0
  *
  * Created:
  *   5/15/2020, 6:42:18 PM
  * Last edited:
- *   5/15/2020, 6:50:08 PM
+ *   5/18/2020, 9:24:34 PM
  * Auto updated?
  *   Yes
  *
@@ -18,7 +22,6 @@
 #include "Math.hpp"
 
 using namespace std;
-using namespace Numbers;
 
 
 Number* Math::fibonacci(const Number& n) {
